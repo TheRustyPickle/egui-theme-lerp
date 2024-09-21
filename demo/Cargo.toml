@@ -1,0 +1,13 @@
+[package]
+name = "egui-theme-lerp-demo"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+eframe = { version = "0.28.1", default-features = true }
+egui = "0.28.1"
+egui-theme-lerp = { path = ".." }
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+wasm-bindgen-futures = "0.4"
+web-sys = "0.3.4"
