@@ -23,7 +23,7 @@ pub struct MainWindow {
 }
 
 impl MainWindow {
-    pub fn new( -> Self {
+    pub fn new() -> Self {
         Self {
             theme_animator: ThemeAnimator::new(Visuals::light(), Visuals::dark()),
         }
@@ -50,6 +50,20 @@ impl eframe::App for MainWindow {
 }
 
 ```
+
+# Run Demo
+
+The demo is accessible online via [this link](https://therustypickle.github.io/egui-theme-lerp/)
+
+- Clone the repository `git clone https://github.com/TheRustyPickle/egui-theme-lerp`
+- Move into the demo folder `cd egui-theme-lerp/demo`
+    - To run natively `cargo run --release` 
+
+    or
+
+    - To run in wasm locally install the required target with `rustup target add wasm32-unknown-unknown`
+    - Install Trunk with `cargo install --locked trunk`
+    - `trunk serve` to run and visit `http://127.0.0.1:8080/`
 
 # Contributing
 
