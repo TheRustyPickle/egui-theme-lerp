@@ -2,6 +2,17 @@
 name = "egui-theme-lerp"
 version = "0.1.0"
 edition = "2021"
+authors = ["TheRustyPickle <rusty.pickle94@gmail.com>"]
+readme = "README.md"
+description = """
+An egui lib to animate theme switching between visuals
+"""
+keywords = ["egui", "animation", "interpolation", "switch", "theme"]
+categories = ["gui"]
+homepage = "https://github.com/TheRustyPickle/egui-theme-lerp"
+repository = "https://github.com/TheRustyPickle/egui-theme-lerp"
+license = "MIT"
+exclude = ["/demo", "/.github"]
 
 [dependencies]
 egui = "0.28.1"

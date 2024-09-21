@@ -2,7 +2,7 @@ use egui::Visuals;
 use egui_theme_lerp::ThemeAnimator;
 
 #[cfg(target_arch = "wasm32")]
-use eframe::{WebLogger, WebOptions, WebRunner};
+use eframe::{WebOptions, WebRunner};
 
 #[cfg(not(target_arch = "wasm32"))]
 fn main() -> eframe::Result {
