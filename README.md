@@ -1,4 +1,6 @@
 # egui-theme-lerp
+<a href="https://crates.io/crates/egui-theme-lerp"><img src="https://img.shields.io/crates/v/egui-theme-lerp.svg?style=flat-square&logo=rust&color=orange" alt="Crates version"/></a>
+<a href="https://crates.io/crates/egui-theme-lerp"><img src="https://img.shields.io/crates/d/egui-theme-lerp?style=flat-square" alt="Downloads"/></a>
 
 A simple library for [egui](https://github.com/emilk/egui) to smoothly animate theme transitions by interpolating between any two visuals/themes. It works with any set of visuals, allowing transitions between light/dark modes or custom themes.
 
