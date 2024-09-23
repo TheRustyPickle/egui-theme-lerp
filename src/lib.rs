@@ -1,10 +1,11 @@
 use egui::{Color32, Context, Id, Ui, Visuals};
 
-fn interpolate_color(start: Color32, end: Color32, t: f32) -> Color32 {
-    let r = egui::lerp((start.r() as f32)..=(end.r() as f32), t) as u8;
-    let g = egui::lerp((start.g() as f32)..=(end.g() as f32), t) as u8;
-    let b = egui::lerp((start.b() as f32)..=(end.b() as f32), t) as u8;
-    let a = egui::lerp((start.a() as f32)..=(end.a() as f32), t) as u8;
+#[allow(clippy::many_single_char_names)]
+fn interpolate_color(start: Color32, end: Color32, interpolation: f32) -> Color32 {
+    let r = egui::lerp(f32::from(start.r())..=f32::from(end.r()), interpolation) as u8;
+    let g = egui::lerp(f32::from(start.g())..=f32::from(end.g()), interpolation) as u8;
+    let b = egui::lerp(f32::from(start.b())..=f32::from(end.b()), interpolation) as u8;
+    let a = egui::lerp(f32::from(start.a())..=f32::from(end.a()), interpolation) as u8;
     Color32::from_rgba_premultiplied(r, g, b, a)
 }
 
@@ -28,7 +29,8 @@ pub struct ThemeAnimator {
 impl ThemeAnimator {
     /// Create a new `ThemeAnimator` without an `anim_id`. This will do nothing if `anim_id` is not set
     /// later
-    pub fn new(theme_1: Visuals, theme_2: Visuals) -> Self {
+    #[must_use]
+    pub const fn new(theme_1: Visuals, theme_2: Visuals) -> Self {
         Self {
             anim_id: None,
             theme_1,
@@ -66,6 +68,7 @@ impl ThemeAnimator {
     /// Linear interpolate the theme animation. Automatically switches animation direction for the
     /// next time once completed. Will do nothing unless `animation_done` is `false` and
     /// `anim_id` is set.
+    #[allow(clippy::too_many_lines)] // TODO: Refactor into multiple functions
     pub fn animate(&mut self, ctx: &Context) {
         if self.animation_done {
             return;
