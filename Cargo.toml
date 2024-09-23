@@ -15,4 +15,19 @@ license = "MIT"
 exclude = ["/demo", "/.github"]
 
 [dependencies]
-egui = "0.28.1"
+egui = { version = "0.28.1", default-features = false }
+
+[lints.rust]
+unsafe_code = "forbid"
+
+[lints.clippy]
+nursery = { level = "deny", priority = 0 }
+pedantic = { level = "deny", priority = 1 }
+enum_glob_use = { level = "deny", priority = 2 }
+perf = { level = "deny", priority = 3 }
+style = { level = "deny", priority = 4 }
+unwrap_used = { level = "deny", priority = 5 }
+expect_used = { level = "deny", priority = 6 }
+float_cmp = { level = "allow", priority = 7 }
+cast_sign_loss = { level = "allow", priority = 8 }
+cast_possible_truncation = { level = "allow", priority = 9 }

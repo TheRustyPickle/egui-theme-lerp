@@ -1,4 +1,5 @@
 # egui-theme-lerp
+
 <a href="https://crates.io/crates/egui-theme-lerp"><img src="https://img.shields.io/crates/v/egui-theme-lerp.svg?style=flat-square&logo=rust&color=orange" alt="Crates version"/></a>
 <a href="https://crates.io/crates/egui-theme-lerp"><img src="https://img.shields.io/crates/d/egui-theme-lerp?style=flat-square" alt="Downloads"/></a>
 
@@ -6,15 +7,16 @@ A simple library for [egui](https://github.com/emilk/egui) to smoothly animate t
 
 [](https://github.com/user-attachments/assets/5ea94394-f60b-4b62-bd3f-38497d89b984)
 
-# Installation
+## Installation
 
 Add the following to your `Cargo.toml`:
+
 ```toml
 [dependencies]
 egui-theme-lerp = "0.1.0"
 ```
 
-# Usage
+## Usage
 
 ```rust
 use egui_theme_lerp::ThemeAnimator;
@@ -53,24 +55,25 @@ impl eframe::App for MainWindow {
 
 ```
 
-# Run Demo
+## Run Demo
 
 The demo is accessible online via [this link](https://therustypickle.github.io/egui-theme-lerp/)
 
 - Clone the repository `git clone https://github.com/TheRustyPickle/egui-theme-lerp`
 - Move into the demo folder `cd egui-theme-lerp/demo`
-    - To run natively `cargo run --release` 
 
-    or
+  - To run natively `cargo run --release`
 
-    - To run in wasm locally install the required target with `rustup target add wasm32-unknown-unknown`
-    - Install Trunk with `cargo install --locked trunk`
-    - `trunk serve` to run and visit `http://127.0.0.1:8080/`
+  or
 
-# Contributing
+  - To run in wasm locally install the required target with `rustup target add wasm32-unknown-unknown`
+  - Install Trunk with `cargo install --locked trunk`
+  - `trunk serve` to run and visit `http://127.0.0.1:8080/`
+
+## Contributing
 
 Contributions, issues, and feature requests are welcome! If you'd like to contribute, please open a pull request.
 
-# License
+## License
 
 This project is licensed under the MIT License.
