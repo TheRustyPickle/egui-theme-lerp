@@ -1,4 +1,5 @@
-use egui::Visuals;
+use eframe::egui;
+use egui::{ThemePreference, Visuals};
 use egui_theme_lerp::ThemeAnimator;
 
 #[cfg(target_arch = "wasm32")]
@@ -11,7 +12,6 @@ fn main() -> eframe::Result {
     let options = eframe::NativeOptions {
         centered: true,
         persist_window: false,
-        default_theme: eframe::Theme::Light,
         viewport: ViewportBuilder {
             inner_size: Some(vec2(400.0, 400.0)),
 
@@ -29,22 +29,31 @@ fn main() -> eframe::Result {
 
 #[cfg(target_arch = "wasm32")]
 fn main() {
+    use eframe::wasm_bindgen::JsCast as _;
     let web_options = WebOptions::default();
 
     wasm_bindgen_futures::spawn_local(async {
+        let document = web_sys::window()
+            .expect("No window")
+            .document()
+            .expect("No document");
+
+        let canvas = document
+            .get_element_by_id("the_canvas_id")
+            .expect("Failed to find the_canvas_id")
+            .dyn_into::<web_sys::HtmlCanvasElement>()
+            .expect("the_canvas_id was not a HtmlCanvasElement");
+
         let start_result = WebRunner::new()
             .start(
-                "the_canvas_id",
+                canvas,
                 web_options,
                 Box::new(|cc| Ok(Box::new(MainWindow::new(cc)))),
             )
             .await;
 
         // Remove the loading text and spinner:
-        let loading_text = web_sys::window()
-            .and_then(|w| w.document())
-            .and_then(|d| d.get_element_by_id("loading_text"));
-        if let Some(loading_text) = loading_text {
+        if let Some(loading_text) = document.get_element_by_id("loading_text") {
             match start_result {
                 Ok(_) => {
                     loading_text.remove();
@@ -67,6 +76,8 @@ pub struct MainWindow {
 impl MainWindow {
     pub fn new(cc: &eframe::CreationContext<'_>) -> Self {
         cc.egui_ctx.set_pixels_per_point(1.2);
+        cc.egui_ctx
+            .options_mut(|a| a.theme_preference = ThemePreference::System);
         Self {
             theme_animator: ThemeAnimator::new(Visuals::light(), Visuals::dark()),
         }
