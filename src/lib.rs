@@ -9,6 +9,10 @@ fn interpolate_color(start: Color32, end: Color32, interpolation: f32) -> Color3
     Color32::from_rgba_premultiplied(r, g, b, a)
 }
 
+/// A structure to manage and animate between two different themes in egui.
+///
+/// This allows smooth transitions (interpolations) between two sets of visuals (themes) over a
+/// specified period.
 pub struct ThemeAnimator {
     /// egui persistent ID used for animation
     pub anim_id: Option<Id>,
@@ -27,8 +31,18 @@ pub struct ThemeAnimator {
 }
 
 impl ThemeAnimator {
-    /// Create a new `ThemeAnimator` without an `anim_id`. This will do nothing if `anim_id` is not set
-    /// later
+    /// Creates a new `ThemeAnimator` without an assigned `anim_id`.
+    ///
+    /// This constructor initializes the animator with two themes but leaves the `anim_id` as `None`,
+    /// meaning that no animation will take place until the ID is set via `set_id` or `create_id`.
+    ///
+    /// # Parameters:
+    /// - `theme_1`: The starting theme for the animation.
+    /// - `theme_2`: The ending theme for the animation.
+    ///
+    /// # Returns:
+    /// A new `ThemeAnimator` with the provided themes and default values for other fields.
+    ///
     #[must_use]
     pub const fn new(theme_1: Visuals, theme_2: Visuals) -> Self {
         Self {
@@ -42,32 +56,81 @@ impl ThemeAnimator {
         }
     }
 
-    /// Update the amount of time the animation should take
+    /// Sets the duration of the theme animation.
+    ///
+    /// This method allows you to configure the total time (in seconds) that the theme transition
+    /// should take. The returned `ThemeAnimator` instance will have the updated animation time.
+    ///
+    /// # Parameters:
+    /// - `time`: The new animation duration in seconds.
+    ///
+    /// # Returns:
+    /// A new `ThemeAnimator` instance with the updated animation time.
+    #[must_use]
+    pub const fn animation_time(mut self, time: f32) -> Self {
+        self.animation_time = time;
+        self
+    }
+
+    /// Updates the animation time.
+    ///
+    /// This method changes the total duration (in seconds) that the animation will take to
+    /// complete. Adjust this based on how fast or slow you want the transition between themes.
+    ///
+    /// # Parameters:
+    /// - `new_time`: The new animation time in seconds.
+    ///
     pub fn update_animation_time(&mut self, new_time: f32) {
         self.animation_time = new_time;
     }
 
-    /// Use the passed `Id` for `anim_id`
+    /// Assigns a persistent ID to control the animation.
+    ///
+    /// This sets the `anim_id` using an existing egui `Id`, allowing egui to track and manage
+    /// the animation's state.
+    ///
+    /// # Parameters:
+    /// - `ctx`: The egui `Context` object.
+    /// - `anim_id`: The persistent `Id` used for tracking animation progress.
     pub fn set_id(&mut self, ctx: &Context, anim_id: Id) {
         ctx.animate_value_with_time(anim_id, 0.0, 0.0);
         self.anim_id = Some(anim_id);
     }
 
-    /// Set `anim_id` by creating a new `Id` and use that for animation
+    /// Creates a new persistent `Id` for the animation.
+    ///
+    /// This method generates a new persistent `Id` for the animator using the provided `Ui` context.
+    /// It is useful when an `Id` is not manually provided and needs to be created on-the-fly.
+    ///
+    /// # Parameters:
+    /// - `ui`: The egui `Ui` object to generate a persistent ID.
     pub fn create_id(&mut self, ui: &Ui) {
         let anim_id = ui.make_persistent_id("theme_animator");
         ui.ctx().animate_value_with_time(anim_id, 0.0, 0.0);
         self.anim_id = Some(anim_id);
     }
 
-    /// Start animation
+    /// Starts the theme animation.
+    ///
+    /// Sets the `animation_done` flag to `false`, allowing the interpolation to start. Does
+    /// nothing if called multiple times while animation is ongoing.
     pub fn start(&mut self) {
         self.animation_done = false;
     }
 
-    /// Linear interpolate the theme animation. Automatically switches animation direction for the
-    /// next time once completed. Will do nothing unless `animation_done` is `false` and
-    /// `anim_id` is set.
+    /// Performs the animation, interpolating between the two visuals.
+    ///
+    /// This function progresses the animation if `animation_done` is set to `false` and
+    /// an `anim_id` is assigned. Once the animation reaches the end (`progress` reaches 1.0),
+    /// it will automatically switch the animation direction (from `theme_1` to `theme_2` or
+    /// vice versa) for the next time it is started.
+    ///
+    /// # Parameters:
+    /// - `ctx`: The egui `Context` object used for handling the animation.
+    ///
+    /// # Notes:
+    /// This method does nothing if the animation is already complete (`animation_done = true`)
+    /// or if `anim_id` is not set.
     #[allow(clippy::too_many_lines)] // TODO: Refactor into multiple functions
     pub fn animate(&mut self, ctx: &Context) {
         if self.animation_done {
@@ -280,6 +343,7 @@ impl ThemeAnimator {
             end_visual.popup_shadow.color,
             self.progress,
         );
+
         new_visual.text_cursor.stroke.color = interpolate_color(
             start_visual.text_cursor.stroke.color,
             end_visual.text_cursor.stroke.color,
