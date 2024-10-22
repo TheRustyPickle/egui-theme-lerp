@@ -77,7 +77,7 @@ impl MainWindow {
     pub fn new(cc: &eframe::CreationContext<'_>) -> Self {
         cc.egui_ctx.set_pixels_per_point(1.2);
         cc.egui_ctx
-            .options_mut(|a| a.theme_preference = ThemePreference::System);
+            .options_mut(|a| a.theme_preference = ThemePreference::Light);
         Self {
             theme_animator: ThemeAnimator::new(Visuals::light(), Visuals::dark()),
         }
