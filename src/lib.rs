@@ -80,7 +80,7 @@ impl ThemeAnimator {
     /// # Parameters:
     /// - `new_time`: The new animation time in seconds.
     ///
-    pub fn update_animation_time(&mut self, new_time: f32) {
+    pub const fn update_animation_time(&mut self, new_time: f32) {
         self.animation_time = new_time;
     }
 
@@ -114,7 +114,7 @@ impl ThemeAnimator {
     ///
     /// Sets the `animation_done` flag to `false`, allowing the interpolation to start. Does
     /// nothing if called multiple times while animation is ongoing.
-    pub fn start(&mut self) {
+    pub const fn start(&mut self) {
         self.animation_done = false;
     }
 
