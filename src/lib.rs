@@ -132,13 +132,13 @@ impl ThemeAnimator {
     /// This method does nothing if the animation is already complete (`animation_done = true`)
     /// or if `anim_id` is not set.
     #[allow(clippy::too_many_lines)] // TODO: Refactor into multiple functions
-    pub fn animate(&mut self, ctx: &Context) {
+    pub fn animate(&mut self, ui: &mut Ui) {
         if self.animation_done {
             return;
         }
         let Some(anim_id) = self.anim_id else { return };
 
-        self.progress = ctx.animate_value_with_time(anim_id, 1.0, self.animation_time);
+        self.progress = ui.animate_value_with_time(anim_id, 1.0, self.animation_time);
 
         let (mut new_visual, start_visual, end_visual) = if self.theme_1_to_2 {
             (self.theme_2.clone(), &self.theme_1, &self.theme_2)
@@ -350,13 +350,13 @@ impl ThemeAnimator {
             self.progress,
         );
 
-        ctx.set_visuals(new_visual);
+        ui.set_visuals(new_visual);
 
         if self.progress == 1.0 {
             self.animation_done = true;
             self.theme_1_to_2 = !self.theme_1_to_2;
             self.progress = 0.0;
-            ctx.animate_value_with_time(anim_id, 0.0, 0.0);
+            ui.animate_value_with_time(anim_id, 0.0, 0.0);
         }
     }
 }

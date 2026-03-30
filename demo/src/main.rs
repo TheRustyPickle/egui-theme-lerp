@@ -7,7 +7,7 @@ use eframe::{WebOptions, WebRunner};
 
 #[cfg(not(target_arch = "wasm32"))]
 fn main() -> eframe::Result {
-    use egui::{vec2, ViewportBuilder};
+    use egui::{ViewportBuilder, vec2};
 
     let options = eframe::NativeOptions {
         centered: true,
@@ -85,12 +85,12 @@ impl MainWindow {
 }
 
 impl eframe::App for MainWindow {
-    fn update(&mut self, ctx: &eframe::egui::Context, _frame: &mut eframe::Frame) {
-        egui::CentralPanel::default().show(ctx, |ui| {
+    fn ui(&mut self, ui: &mut eframe::egui::Ui, _frame: &mut eframe::Frame) {
+        egui::CentralPanel::default().show_inside(ui, |ui| {
             if self.theme_animator.anim_id.is_none() {
                 self.theme_animator.create_id(ui);
             } else {
-                self.theme_animator.animate(ctx);
+                self.theme_animator.animate(ui);
             }
 
             let theme_emoji = if !self.theme_animator.animation_done {
