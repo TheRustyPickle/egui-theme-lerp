@@ -9,6 +9,23 @@ fn interpolate_color(start: Color32, end: Color32, interpolation: f32) -> Color3
     Color32::from_rgba_premultiplied(r, g, b, a)
 }
 
+fn interpolate_opt_color(
+    start: Option<Color32>,
+    end: Option<Color32>,
+    start_fallback: Color32,
+    end_fallback: Color32,
+    interpolation: f32,
+) -> Option<Color32> {
+    if start.is_none() && end.is_none() {
+        return None;
+    }
+    Some(interpolate_color(
+        start.unwrap_or(start_fallback),
+        end.unwrap_or(end_fallback),
+        interpolation,
+    ))
+}
+
 /// A structure to manage and animate between two different themes in egui.
 ///
 /// This allows smooth transitions (interpolations) between two sets of visuals (themes) over a
@@ -275,6 +292,40 @@ impl ThemeAnimator {
             );
         }
 
+        {
+            new_visual.ime_composition.active_underline_stroke.color = interpolate_color(
+                start_visual.ime_composition.active_underline_stroke.color,
+                end_visual.ime_composition.active_underline_stroke.color,
+                self.progress,
+            );
+            new_visual.ime_composition.inactive_underline_stroke.color = interpolate_color(
+                start_visual.ime_composition.inactive_underline_stroke.color,
+                end_visual.ime_composition.inactive_underline_stroke.color,
+                self.progress,
+            );
+        }
+
+        {
+            new_visual.override_text_color = interpolate_opt_color(
+                start_visual.override_text_color,
+                end_visual.override_text_color,
+                start_visual.text_color(),
+                end_visual.text_color(),
+                self.progress,
+            );
+            new_visual.weak_text_color = interpolate_opt_color(
+                start_visual.weak_text_color,
+                end_visual.weak_text_color,
+                start_visual.weak_text_color(),
+                end_visual.weak_text_color(),
+                self.progress,
+            );
+            new_visual.weak_text_alpha = egui::lerp(
+                start_visual.weak_text_alpha..=end_visual.weak_text_alpha,
+                self.progress,
+            );
+        }
+
         new_visual.hyperlink_color = interpolate_color(
             start_visual.hyperlink_color,
             end_visual.hyperlink_color,
@@ -290,6 +341,13 @@ impl ThemeAnimator {
             new_visual.extreme_bg_color = interpolate_color(
                 start_visual.extreme_bg_color,
                 end_visual.extreme_bg_color,
+                self.progress,
+            );
+            new_visual.text_edit_bg_color = interpolate_opt_color(
+                start_visual.text_edit_bg_color,
+                end_visual.text_edit_bg_color,
+                start_visual.text_edit_bg_color(),
+                end_visual.text_edit_bg_color(),
                 self.progress,
             );
         }
@@ -347,6 +405,11 @@ impl ThemeAnimator {
         new_visual.text_cursor.stroke.color = interpolate_color(
             start_visual.text_cursor.stroke.color,
             end_visual.text_cursor.stroke.color,
+            self.progress,
+        );
+
+        new_visual.disabled_alpha = egui::lerp(
+            start_visual.disabled_alpha..=end_visual.disabled_alpha,
             self.progress,
         );
 
